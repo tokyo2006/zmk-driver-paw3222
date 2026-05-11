@@ -38,4 +38,3 @@ properties:
     type: boolean
     description: |
       If true, disables burst read and uses single register reads for motion data. Default is false.
-    default: false
