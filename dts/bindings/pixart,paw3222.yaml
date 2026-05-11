@@ -21,7 +21,7 @@ properties:
     description:
       GPIO connected to the power control pin.
 
-  res-cpi:
+  cpi:
     type: int
     description: |
       CPI resolution for the sensor. This can also be changed in runtime using

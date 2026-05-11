@@ -71,7 +71,7 @@ struct paw32xx_config {
     struct spi_dt_spec spi;
     struct gpio_dt_spec irq_gpio;
     struct gpio_dt_spec power_gpio;
-    int16_t res_cpi;
+        int16_t cpi;
     bool force_awake;
     bool disable_burst_read;
 };
@@ -326,8 +326,8 @@ int paw32xx_set_resolution(const struct device *dev, uint16_t res_cpi) {
     uint8_t val;
     int ret;
 
-    if (!IN_RANGE(res_cpi, RES_MIN, RES_MAX)) {
-        LOG_ERR("res_cpi out of range: %d", res_cpi);
+    if (!IN_RANGE(cpi, RES_MIN, RES_MAX)) {
+        LOG_ERR("cpi out of range: %d", cpi);
         return -EINVAL;
     }
 
@@ -421,7 +421,7 @@ static void paw32xx_async_init(struct k_work *work) {
     k_sleep(K_MSEC(RESET_DELAY_MS));
 
     if (cfg->res_cpi > 0) {
-        paw32xx_set_resolution(dev, cfg->res_cpi);
+        paw32xx_set_resolution(dev, cfg->cpi);
     }
     paw32xx_force_awake(dev, cfg->force_awake);
 
@@ -577,14 +577,14 @@ static int paw32xx_pm_action(const struct device *dev, enum pm_device_action act
     (SPI_OP_MODE_MASTER | SPI_WORD_SET(8) | SPI_MODE_CPOL | SPI_MODE_CPHA | SPI_TRANSFER_MSB)
 
 #define PAW32XX_INIT(n)                                                                            \
-    BUILD_ASSERT(IN_RANGE(DT_INST_PROP_OR(n, res_cpi, RES_MIN), RES_MIN, RES_MAX),                 \
-                 "invalid res-cpi");                                                               \
+    BUILD_ASSERT(IN_RANGE(DT_INST_PROP_OR(n, cpi, RES_MIN), RES_MIN, RES_MAX),                 \
+                 "invalid cpi");                                                               \
                                                                                                    \
     static const struct paw32xx_config paw32xx_cfg_##n = {                                         \
         .spi = SPI_DT_SPEC_INST_GET(n, PAW32XX_SPI_MODE, 0),                                       \
         .irq_gpio = GPIO_DT_SPEC_INST_GET(n, irq_gpios),                                           \
         .power_gpio = GPIO_DT_SPEC_INST_GET_OR(n, power_gpios, {0}),                               \
-        .res_cpi = DT_INST_PROP_OR(n, res_cpi, -1),                                                \
+        .cpi = DT_INST_PROP_OR(n, cpi, -1),                                                        \
         .force_awake = DT_INST_PROP(n, force_awake),                                               \
         .disable_burst_read = DT_INST_PROP_OR(n, disable_burst_read, 0),                           \
     };                                                                                             \
