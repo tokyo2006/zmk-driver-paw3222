@@ -447,8 +447,8 @@ int paw32xx_set_resolution(const struct device *dev, uint16_t res_cpi) {
     uint8_t val;
     int ret;
 
-    if (!IN_RANGE(cpi, RES_MIN, RES_MAX)) {
-        LOG_ERR("cpi out of range: %d", cpi);
+    if (!IN_RANGE(res_cpi, RES_MIN, RES_MAX)) {
+        LOG_ERR("cpi out of range: %d", res_cpi);
         return -EINVAL;
     }
 
