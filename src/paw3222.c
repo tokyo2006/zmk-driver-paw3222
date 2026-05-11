@@ -541,7 +541,7 @@ static void paw32xx_async_init(struct k_work *work) {
     }
     k_sleep(K_MSEC(RESET_DELAY_MS));
 
-    if (cfg->res_cpi > 0) {
+    if (cfg->cpi > 0) {
         paw32xx_set_resolution(dev, cfg->cpi);
     }
     paw32xx_force_awake(dev, cfg->force_awake);
