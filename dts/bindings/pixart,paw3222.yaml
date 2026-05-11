@@ -33,3 +33,9 @@ properties:
       Initialize the sensor in "force awake" mode. This can also be enabled or
       disabled in runtime by the application using the paw32xx_force_awake()
       API.
+
+  disable-burst-read:
+    type: boolean
+    description: |
+      If true, disables burst read and uses single register reads for motion data. Default is false.
+    default: false
