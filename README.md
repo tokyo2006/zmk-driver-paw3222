@@ -32,6 +32,8 @@ manifest:
 Configure in your shield or board config file (.overlay or .dtsi):
 
 ```dts
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
 &pinctrl {
     spi0_default: spi0_default {
         group1 {
@@ -61,10 +63,13 @@ Configure in your shield or board config file (.overlay or .dtsi):
 
     trackball: trackball@0 {
         status = "okay";
-        compatible = "pixart,paw3222";
+        compatible = "xinta,paw3222";
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_X>;
+        y-input-code = <INPUT_REL_Y>;
     };
 };
 ```
@@ -88,7 +93,10 @@ endif
 ## Properties
 
 - `irq-gpios`: GPIO connected to the motion pin (required)
-- `res-cpi`: CPI resolution for the sensor (optional)
+- `cpi`: CPI resolution for the sensor (optional)
+- `evt-type`: Input event type, e.g. `INPUT_EV_REL` (required)
+- `x-input-code`: Input code for X motion, e.g. `INPUT_REL_X` (required)
+- `y-input-code`: Input code for Y motion, e.g. `INPUT_REL_Y` (required)
 - `force-awake`: Initialize the sensor in "force awake" mode (optional, boolean)
 
 ---
@@ -128,6 +136,8 @@ manifest:
 シールドまたはボード設定ファイル（.overlayまたは.dtsi）で設定：
 
 ```dts
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
 &pinctrl {
     spi0_default: spi0_default {
         group1 {
@@ -157,10 +167,13 @@ manifest:
 
     trackball: trackball@0 {
         status = "okay";
-        compatible = "pixart,paw3222";
+        compatible = "xinta,paw3222";
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_X>;
+        y-input-code = <INPUT_REL_Y>;
     };
 };
 ```
@@ -184,5 +197,8 @@ endif
 ## プロパティ
 
 - `irq-gpios`: モーションピンに接続されたGPIO（必須）
-- `res-cpi`: センサーのCPI解像度（任意）
+- `cpi`: センサーのCPI解像度（任意）
+- `evt-type`: 入力イベントタイプ（例：`INPUT_EV_REL`）（必須）
+- `x-input-code`: X軸モーションの入力コード（例：`INPUT_REL_X`）（必須）
+- `y-input-code`: Y軸モーションの入力コード（例：`INPUT_REL_Y`）（必須）
 - `force-awake`: センサーを「強制起動」モードで初期化（任意、ブール値）
