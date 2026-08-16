@@ -30,7 +30,7 @@
 
 LOG_MODULE_REGISTER(paw32xx, CONFIG_ZMK_LOG_LEVEL);
 
-#define DT_DRV_COMPAT pixart_paw3222
+#define DT_DRV_COMPAT xinta_paw3222
 
 #if DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT)
 
@@ -76,9 +76,12 @@ struct paw32xx_config {
     struct spi_dt_spec spi;
     struct gpio_dt_spec irq_gpio;
     struct gpio_dt_spec power_gpio;
-        int16_t cpi;
+    int16_t cpi;
     bool force_awake;
     bool disable_burst_read;
+    uint16_t evt_type;
+    uint16_t x_input_code;
+    uint16_t y_input_code;
 };
 
 struct paw32xx_data {
@@ -418,8 +421,8 @@ static void paw32xx_motion_work_handler(struct k_work *work) {
 
     LOG_DBG("x=%4d y=%4d", x, y);
 
-    input_report_rel(data->dev, INPUT_REL_X, x, false, K_FOREVER);
-    input_report_rel(data->dev, INPUT_REL_Y, y, true, K_FOREVER);
+    input_report(data->dev, cfg->evt_type, cfg->x_input_code, x, false, K_FOREVER);
+    input_report(data->dev, cfg->evt_type, cfg->y_input_code, y, true, K_FOREVER);
 
     // Schedule next check after 15ms without using interrupts
     k_timer_start(&data->motion_timer, K_MSEC(15), K_NO_WAIT);
@@ -714,6 +717,9 @@ static int paw32xx_pm_action(const struct device *dev, enum pm_device_action act
         .cpi = DT_INST_PROP_OR(n, cpi, -1),                                                        \
         .force_awake = DT_INST_PROP(n, force_awake),                                               \
         .disable_burst_read = DT_INST_PROP_OR(n, disable_burst_read, 0),                           \
+        .evt_type = DT_PROP(DT_DRV_INST(n), evt_type),                                             \
+        .x_input_code = DT_PROP(DT_DRV_INST(n), x_input_code),                                     \
+        .y_input_code = DT_PROP(DT_DRV_INST(n), y_input_code),                                     \
     };                                                                                             \
                                                                                                    \
     static struct paw32xx_data paw32xx_data_##n;                                                   \

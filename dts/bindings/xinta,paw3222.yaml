@@ -4,7 +4,7 @@
 
 description: PAW32xx ultra low power wireless mouse chip
 
-compatible: "pixart,paw3222"
+compatible: "xinta,paw3222"
 
 include: spi-device.yaml
 
@@ -26,6 +26,18 @@ properties:
     description: |
       CPI resolution for the sensor. This can also be changed in runtime using
       the paw32xx_set_resolution() API.
+
+  evt-type:
+    type: int
+    required: true
+
+  x-input-code:
+    type: int
+    required: true
+
+  y-input-code:
+    type: int
+    required: true
 
   force-awake:
     type: boolean
